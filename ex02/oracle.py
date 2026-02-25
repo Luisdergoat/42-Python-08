@@ -110,7 +110,13 @@ def main():
     if not validate_configuration(config):
         return
     print("\nConfiguration loaded successfully!")
-    print("You're ready to connect to the Oracle and access the "
+    print("Configuration loaded:")
+    print(f"Mode: {config['MATRIX_MODE']}")
+    print("Database: Connected to local instance")
+    print("API Access: Authenticated")
+    print(f"Log Level: {config['LOG_LEVEL']}")
+    print("Zion Network: Online")
+    print("\nYou're ready to connect to the Oracle and access the "
           "secrets of the Matrix.")
 
 
