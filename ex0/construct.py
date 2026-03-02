@@ -3,14 +3,17 @@ import sys
 
 
 def get_path():
+    # Baut den typischen site-packages-Pfad des aktiven venv zusammen.
     return f"{os.getenv('VIRTUAL_ENV')}lib/python\
         {sys.version_info.major}.{sys.version_info.minor}/site-packages"
 
 
 def check_env():
+    # Prüft, ob eine virtuelle Umgebung aktiv ist.
     if os.getenv("VIRTUAL_ENV") is None:
         print_no_env()
     else:
+        # Erfolgsfall: wir zeigen dem Nutzer, dass er isoliert arbeitet.
         print("MATRIX STATUS: Welcome to the construct!\n")
         print(f"Current Python: {sys.executable}")
         print("Virtual Enviroment: matrix_env")
@@ -22,6 +25,7 @@ def check_env():
 
 
 def print_no_env():
+    # Fehlerfall: keine venv aktiv, daher Warnung + kurze Anleitung.
     print("MATRIX Status: You're still plugged in\n")
     print(f"Current Python: {sys.executable}")
     print("Virtual Enviroment: Not Detected")
@@ -37,6 +41,7 @@ def print_no_env():
 
 
 def main():
+    # Einstiegspunkt: startet die Umgebungsprüfung.
     check_env()
 
 

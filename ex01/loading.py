@@ -6,10 +6,13 @@ import os
 import importlib
 
 os.environ['MPLBACKEND'] = 'Agg'
+# Erzwingt einen nicht-interaktiven Matplotlib-Backend-Modus,
+# damit das Skript auch ohne GUI (z. B. Server/CI) läuft.
 
 
 def check_dependencies():
     """Check and display installed dependency versions."""
+    # Zu prüfende Pakete mit kurzer Erklärung.
     dependencies = {
         'pandas': 'Data manipulation ready',
         'numpy': 'Numerical computations ready',
@@ -23,6 +26,7 @@ def check_dependencies():
     all_ok = True
     versions = {}
 
+    # Importiert jedes Paket dynamisch und liest die Version aus.
     for package, description in dependencies.items():
         try:
             mod = importlib.import_module(package)
@@ -39,12 +43,13 @@ def check_dependencies():
 def analyze_matrix_data():
     """Analyze matrix data and create visualization."""
     try:
+        # Lokaler Import: nur nötig, wenn die Dependencies vorhanden sind.
         import pandas as pd
         import numpy as np
 
         print("Analyzing Matrix data...")
 
-        # Generate sample data
+        # Erstellt Testdaten mit 1000 Zufallswerten für x und y.
         data_points = 1000
         print(f"Processing {data_points} data points...")
 
@@ -53,10 +58,11 @@ def analyze_matrix_data():
             'y': np.random.randn(data_points)
         })
 
-        # Create visualization
+        # Erstellt ein Streudiagramm und speichert es als PNG.
         print("Generating visualization...")
         try:
             import matplotlib.pyplot as plt
+
             plt.figure(figsize=(8, 6))
             plt.scatter(data['x'], data['y'], alpha=0.5)
             plt.xlabel('X Axis')
@@ -66,7 +72,8 @@ def analyze_matrix_data():
             plt.savefig('matrix_analysis.png')
             plt.close()
         except Exception:
-            # If matplotlib fails, create a simple text summary instead
+            # Fallback: Falls Plotten fehlschlägt, wird eine
+            # Text-Zusammenfassung geschrieben.
             with open('matrix_analysis.txt', 'w') as f:
                 f.write("Matrix Analysis Summary\n")
                 f.write(f"Points: {data_points}\n")
@@ -77,6 +84,7 @@ def analyze_matrix_data():
         print("Results saved to: matrix_analysis.png")
 
     except ImportError as e:
+        # Bricht sauber ab, wenn Kernpakete fehlen.
         print(f"Error: Missing required package - {e}")
         print("Install dependencies with: pip install -r requirements.txt")
         sys.exit(1)
@@ -84,15 +92,18 @@ def analyze_matrix_data():
 
 def main():
     """Main function."""
+    # Schritt 1: Abhängigkeiten prüfen.
     all_ok, versions = check_dependencies()
 
     if not all_ok:
+        # Wenn Pakete fehlen, direkte Installationshinweise ausgeben.
         print("\nMissing dependencies!")
         print("Install with: pip install -r requirements.txt")
         print("Or: poetry install")
         sys.exit(1)
 
     print()
+    # Schritt 2: Nur bei vollständiger Umgebung Analyse ausführen.
     analyze_matrix_data()
 
 

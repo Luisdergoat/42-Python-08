@@ -22,18 +22,21 @@ ALLOWED_LOG_LEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
 def check_env() -> bool:
+    # True, wenn eine virtuelle Umgebung aktiv ist.
     if os.getenv("VIRTUAL_ENV") is None:
         return False
     return True
 
 
 def check_required_libs() -> bool:
+    # Prüft alle benötigten Bibliotheken per dynamischem Import.
     missing_libs = []
     for lib, package in REQUIRED_LIBS.items():
         try:
             importlib.import_module(lib)
         except ImportError:
             missing_libs.append(package)
+    # Fehlende Pakete gesammelt ausgeben.
     if missing_libs:
         print(f"Missing required libraries: {', '.join(missing_libs)}")
         return False
@@ -41,6 +44,7 @@ def check_required_libs() -> bool:
 
 
 def print_env_instructions() -> None:
+    # Gibt je nach Zustand Hilfetext oder Erfolgsmeldung aus.
     if check_env() is False:
         print("ERROR: You're not in a virtual environment!")
         print("To enter the construct, run:")
@@ -59,6 +63,7 @@ def print_env_instructions() -> None:
 
 
 def print_install_instructions() -> None:
+    # Installationshinweis für fehlende Bibliotheken.
     if check_env() is False:
         print("ERROR: You're not in a virtual environment!")
         print("To enter the construct, run:")
@@ -71,9 +76,11 @@ def print_install_instructions() -> None:
 
 
 def load_configuration() -> dict:
+    # Lädt Variablen aus .env in die Prozessumgebung.
     from dotenv import load_dotenv
     load_dotenv()
     config = {}
+    # Prüft, ob alle Pflichtvariablen gesetzt sind.
     for var in REQUIRED_VARS:
         value = os.getenv(var)
         if value is None:
@@ -84,6 +91,7 @@ def load_configuration() -> dict:
 
 
 def validate_configuration(config: dict) -> bool:
+    # Validiert erlaubte Werte für Betriebsmodus und Log-Level.
     mode = config.get("MATRIX_MODE")
     log_level = config.get("LOG_LEVEL")
     if mode not in ALLOWED_MODES:
@@ -98,17 +106,22 @@ def validate_configuration(config: dict) -> bool:
 
 
 def main():
+    # 1) Umgebung prüfen und Status ausgeben.
     print_env_instructions()
     if check_env() is False:
         return
+    # 2) Bibliotheken prüfen.
     if not check_required_libs():
         print_install_instructions()
         return
+    # 3) Konfiguration laden.
     config = load_configuration()
     if not config:
         return
+    # 4) Inhalt der Konfiguration validieren.
     if not validate_configuration(config):
         return
+    # 5) Erfolgsmeldung ausgeben.
     print("\nConfiguration loaded successfully!")
     print("Configuration loaded:")
     print(f"Mode: {config['MATRIX_MODE']}")
