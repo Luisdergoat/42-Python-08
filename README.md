@@ -23,10 +23,10 @@ Each exercise is independent and can be run on its own.
 
 ### What this task does
 
-This script checks if `VIRTUAL_ENV` is set.
+This script checks whether `VIRTUAL_ENV` is set.
 
-- If you are **not** in a virtual environment, it shows warning messages and activation instructions.
-- If you are in a virtual environment, it prints environment information and the package install path.
+- Outside a virtual environment, it prints Matrix-themed warnings and exact activation steps for Unix and Windows.
+- Inside a virtual environment, it prints the current interpreter, environment name/path, and the resolved `site-packages` location.
 
 ### How to run
 
@@ -41,20 +41,21 @@ python3 construct.py
 
 ### What this task does
 
-This script does two things:
+This script demonstrates dependency loading and a small Matrix data workflow:
 
-1. Checks if required packages are installed:
+1. Checks required packages with versions:
 	- `pandas`
 	- `numpy`
 	- `matplotlib`
-	- `requests`
-2. Generates random data, performs a simple analysis, and saves output.
+	- `requests` is optional and only relevant if you decide to fetch external API data.
+2. Shows a clear `pip` vs `Poetry` dependency-management comparison in the program output.
+3. Generates Matrix data with `numpy` (1000 points), analyzes it with `pandas`, and renders a plot with `matplotlib`.
 
-If plotting works, it creates:
+On success, it creates:
 
 - `matrix_analysis.png`
 
-If plotting fails, it creates a text summary file instead.
+If required dependencies are missing, it exits gracefully and shows install instructions for both `pip` and `Poetry`.
 
 ### Install dependencies
 
@@ -83,14 +84,14 @@ python3 loading.py
 
 ### What this task does
 
-This script validates your runtime setup in multiple steps:
+This script implements secure configuration loading for local development and production:
 
-1. Checks if you are inside a virtual environment.
-2. Checks if required library is installed (`python-dotenv`).
-3. Loads required environment variables from `.env`.
-4. Validates allowed values for mode and log level.
+1. Loads settings via `python-dotenv` from `.env` (or environment variables).
+2. Applies environment-variable overrides over `.env` values.
+3. Validates configuration and prints visible differences between `development` and `production` modes.
+4. Prints security checks and friendly warnings for missing configuration.
 
-If everything is correct, it prints a successful configuration message.
+It avoids hardcoded secrets and is designed to work with `.env.example` plus a gitignored real `.env`.
 
 ### Required environment variables
 
@@ -106,7 +107,7 @@ ZION_ENDPOINT=https://zion.example/api
 
 Allowed values:
 
-- `MATRIX_MODE`: `production`, `development`, `testing`
+- `MATRIX_MODE`: `production`, `development`
 - `LOG_LEVEL`: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
 
 ### Install dependency
